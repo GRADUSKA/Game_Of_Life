@@ -5,7 +5,7 @@
 #define COLS 20
 
 // Function to count the number of live neighbors
-int count_neighbors(int grid[ROWS][COLS], int row, int col) {
+int count_neighbors(int grid[ROWS * COLS], int row, int col) {
     int count = 0;
     for (int i = row - 1; i <= row + 1; i++) {
         for (int j = col - 1; j <= col + 1; j++) {
@@ -15,37 +15,37 @@ int count_neighbors(int grid[ROWS][COLS], int row, int col) {
             if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
                 continue;
             }
-            count += grid[i][j];
+            count += grid[i * col + j];
         }
     }
     return count;
 }
 
 // Function to update the grid
-void update_grid(int grid[ROWS][COLS]) {
-    int new_grid[ROWS][COLS];
+void update_grid(int grid[ROWS * COLS]) {
+    int new_grid[ROWS * COLS];
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             int neighbors = count_neighbors(grid, i, j);
-            if (grid[i][j]) {
-                new_grid[i][j] = (neighbors == 2 || neighbors == 3);
+            if (grid[i * COLS + j]) {
+                new_grid[i * COLS + j] = (neighbors == 2 || neighbors == 3);
             } else {
-                new_grid[i][j] = (neighbors == 3);
+                new_grid[i * COLS + j] = (neighbors == 3);
             }
         }
     }
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            grid[i][j] = new_grid[i][j];
+            grid[i * COLS + j] = new_grid[i * COLS + j];
         }
     }
 }
 
 // Function to print the grid
-void print_grid(int grid[ROWS][COLS]) {
+void print_grid(int grid[ROWS * COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            printf("%c", grid[i][j] ? 'O' : '.');
+            printf("%c", grid[i * COLS + j] ? 'O' : '.');
         }
         printf("\n");
     }
@@ -53,12 +53,12 @@ void print_grid(int grid[ROWS][COLS]) {
 }
 
 int main() {
-    int grid[ROWS][COLS];
+    int grid[ROWS *COLS];
 
     // Initialize the grid
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
-            grid[i][j] = rand() % 2;
+            grid[i * COLS + j] = rand() % 2;
         }
     }
 

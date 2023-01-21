@@ -2,83 +2,105 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ROWS 50
-#define COLS 50
-#define CELL_SIZE 10
+#define ROWS 60
+#define COLS 75
+#define CELL_SIZE 20
 
-int grid[ROWS][COLS];
-int new_grid[ROWS][COLS];
+int grid[ROWS * COLS];
+int new_grid[ROWS * COLS];
 
 // Function to count the number of live neighbors
-int count_neighbors(int row, int col) {
+int count_neighbors(int row, int col)
+{
     int count = 0;
-    for (int i = row - 1; i <= row + 1; i++) {
-        for (int j = col - 1; j <= col + 1; j++) {
-            if (i == row && j == col) {
+    for (int i = row - 1; i <= row + 1; i++) 
+    {
+        for (int j = col - 1; j <= col + 1; j++) 
+        {
+            if (i == row && j == col)
+            {
                 continue;
             }
-            if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
+            if (i < 0 || i >= ROWS || j < 0 || j >= COLS) 
+            {
                 continue;
             }
-            count += grid[i][j];
+            count += grid[i * COLS + j];
         }
     }
     return count;
 }
 
 // Function to update the grid
-void update_grid() {
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
+void update_grid()
+{
+    for (int i = 0; i < ROWS; i++) 
+    {
+        for (int j = 0; j < COLS; j++) 
+        {
             int neighbors = count_neighbors(i, j);
-            if (grid[i][j]) {
-                new_grid[i][j] = (neighbors == 2 || neighbors == 3);
-            } else {
-                new_grid[i][j] = (neighbors == 3);
+            if (grid[i * COLS + j])
+            {
+                new_grid[i * COLS + j] = (neighbors == 2 || neighbors == 3);
+            } 
+            else 
+            {
+                new_grid[i * COLS + j] = (neighbors == 3);
             }
         }
     }
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            grid[i][j] = new_grid[i][j];
+    for (int i = 0; i < ROWS; i++) 
+    {
+        for (int j = 0; j < COLS; j++) 
+        {
+            grid[i * COLS + j] = new_grid[i * COLS + j];
         }
     }
 }
 
-int main(int argc, char* argv[]) {
+int main()
+{
     // Initialize the grid
-    for (int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLS; j++) {
-            grid[i][j] = rand() % 2;
+    for (int i = 0; i < ROWS; i++) 
+    {
+        for (int j = 0; j < COLS; j++) 
+        {
+            grid[i * COLS + j] = rand() % 2;
         }
     }
 
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     // Create window
     SDL_Window* window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, COLS * CELL_SIZE, ROWS * CELL_SIZE, SDL_WINDOW_SHOWN);
-    if (window == NULL) {
+    if (window == NULL) 
+    {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     // Create renderer
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (renderer == NULL) {
+    if (renderer == NULL) 
+    {
         printf("Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
         return 1;
     }
 
     // Main loop
-    while (1) {
+    while (1)
+    {
         // Handle events
         SDL_Event e;
-        if (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
+        if (SDL_PollEvent(&e)) 
+        {
+            if (e.type == SDL_QUIT) 
+            {
                 break;
             }
         }
@@ -88,9 +110,12 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
         // Draw the cells
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                if (grid[i][j]) {
+        for (int i = 0; i < ROWS; i++) 
+        {
+            for (int j = 0; j < COLS; j++) 
+            {
+                if (grid[i * COLS + j]) 
+                {
                     SDL_Rect rect = {j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE};
                     SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
                     SDL_RenderFillRect(renderer, &rect);
